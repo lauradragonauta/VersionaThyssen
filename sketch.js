@@ -39,18 +39,12 @@ En conjunto, la pieza habla de la relación entre identidad, memoria y mirada. Y
 
 */
 
-let sistema; // Sistema de partículas principal
-let palabras = ["yo", "mirada", "reflejo", "presencia", "interior", "ella", "luz"]; // Palabras poéticas
-let paleta = []; // Colores inspirados en el cuadro
-let fuentes = []; // Fuentes tipográficas para las palabras
-let estelas; // Capa gráfica para estelas permanentes
+let sistema;
+let palabras = ["yo", "mirada", "reflejo", "presencia", "interior", "ella", "luz"];
+let paleta = [];
+let fuentes = [];
+let estelas;
 
-/* function preload() {
-  fuentes[0] = loadFont("assets/DancingScript-Regular.ttf"); // Fuente 1
-  fuentes[1] = loadFont("assets/Parisienne-Regular.ttf"); // Fuente 2
-  fuentes[2] = loadFont("assets/Gloock-Regular.ttf"); // Fuente 3
-  fuentes[3] = loadFont("assets/GreatVibes-Regular.ttf"); // Fuente 4
-}*/
 function preload() {
   fuentes.push(loadFont('assets/Parisienne-Regular.ttf'));
   fuentes.push(loadFont('assets/Gloock-Regular.ttf'));
@@ -59,82 +53,91 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(600, 600); // Lienzo principal
+  const container = document.getElementById('p5-container');
+  let w = container.offsetWidth;
+  let h = container.offsetHeight;
 
-    // Muestra las fuentes una debajo de otra
-    textFont(fuentes[0]);
-    text('Parisienne-Regular', 50, 100);
-  
-    textFont(fuentes[1]);
-    text('Gloock-Regular', 50, 170);
-  
-    textFont(fuentes[2]);
-    text('DancingScript-Regular', 50, 240);
-  
-    textFont(fuentes[3]);
-    text('GreatVibes-Regular', 50, 310);
-  
+  let canvas = createCanvas(w, h);
+  canvas.parent('p5-container');
 
-  estelas = createGraphics(width, height); // Capa de estelas
+  estelas = createGraphics(w, h);
 
-  // Paleta de colores extraída del cuadro
-  
+  textFont(fuentes[0]);
+  text('Parisienne-Regular', 50, 100);
+  textFont(fuentes[1]);
+  text('Gloock-Regular', 50, 170);
+  textFont(fuentes[2]);
+  text('DancingScript-Regular', 50, 240);
+  textFont(fuentes[3]);
+  text('GreatVibes-Regular', 50, 310);
+
   let dominantes = [
-    [232, 212, 200], // beige rosado claro
-    [243, 238, 230], // crema suave
-    [202, 183, 170], // piel cálida
-    [214, 194, 184], // tono base rosado
-    [180, 180, 180], // gris neutro claro
-    [255, 255, 255]  // blanco de luz
+    [232, 212, 200],
+    [243, 238, 230],
+    [202, 183, 170],
+    [214, 194, 184],
+    [180, 180, 180],
+    [255, 255, 255]
   ];
-  
+
   let secundarios = [
-    [98, 89, 88],   // marrón oscuro (marco)
-    [160, 130, 128], // sombras rosadas
-    [172, 158, 155], // sombra neutra
-    [132, 111, 111], // marrón rojizo
-    [200, 175, 160], // beige oscuro
-    [134, 144, 156]  // azul grisáceo del vestido
+    [98, 89, 88],
+    [160, 130, 128],
+    [172, 158, 155],
+    [132, 111, 111],
+    [200, 175, 160],
+    [134, 144, 156]
   ];
-  
+
   let acentos = [
-    [80, 64, 66],   // sombras profundas / contraste
-    [0, 0, 0],      // contornos / ojos / marco interior
-    [190, 190, 190] // gris medio para transiciones o fondos
+    [80, 64, 66],
+    [0, 0, 0],
+    [190, 190, 190]
   ];
 
   for (let i = 0; i < 6; i++) {
     for (let j = 0; j < 6; j++) {
-      paleta.push(color(...dominantes[i])); // Añadir colores dominantes
+      paleta.push(color(...dominantes[i]));
     }
   }
   for (let i = 0; i < 6; i++) {
     for (let j = 0; j < 3; j++) {
-      paleta.push(color(...secundarios[i])); // Añadir colores secundarios
+      paleta.push(color(...secundarios[i]));
     }
   }
   for (let i = 0; i < 3; i++) {
-    paleta.push(color(...acentos[i])); // Añadir colores de acento
+    paleta.push(color(...acentos[i]));
   }
 
-  sistema = new SistemaParticulas(); // Iniciar el sistema de partículas
+  sistema = new SistemaParticulas();
 }
 
 function draw() {
-  background(245, 240, 235, 20); // Fondo con leve opacidad
-  image(estelas, 0, 0); // Dibujar las estelas
-  sistema.run(); // Ejecutar el sistema de partículas
+  background(245, 240, 235, 20);
+  image(estelas, 0, 0);
+  sistema.run();
 
   noFill();
-  stroke(200, 100); // Color del marco
+  stroke(200, 100);
   strokeWeight(1);
   rectMode(CENTER);
-  rect(width / 2, height / 2, 300, 400); // Dibujar el marco del espejo
+  rect(width / 2, height / 2, 300, 400);
 }
+
+function windowResized() {
+  const container = document.getElementById('p5-container');
+  let w = container.offsetWidth;
+  let h = container.offsetHeight;
+
+  resizeCanvas(w, h);
+  estelas = createGraphics(w, h);
+}
+
+// --------------------------------------------------------
 
 class Particula {
   constructor(generarTexto) {
-    let side = floor(random(4)); // Elegir borde de origen
+    let side = floor(random(4));
     let x, y;
     let w = 300, h = 400;
     if (side === 0) {
@@ -151,39 +154,39 @@ class Particula {
       y = random(height / 2 - h / 2, height / 2 + h / 2);
     }
 
-    this.pos = createVector(x, y); // Posición
-    this.vel = p5.Vector.random2D().mult(random(0.3, 1)); // Velocidad
-    this.acc = createVector(0, 0); // Aceleración
-    this.lifespan = 255; // Vida útil
-    this.tam = random(2, 6); // Tamaño
-    this.esTexto = generarTexto && random(1) < 0.15; // Si es palabra
-    this.dejaEstela = random(1) < 0.1; // Si deja estela
-    this.color = random(paleta); // Color aleatorio
+    this.pos = createVector(x, y);
+    this.vel = p5.Vector.random2D().mult(random(0.3, 1));
+    this.acc = createVector(0, 0);
+    this.lifespan = 255;
+    this.tam = random(2, 6);
+    this.esTexto = generarTexto && random(1) < 0.15;
+    this.dejaEstela = random(1) < 0.1;
+    this.color = random(paleta);
 
     if (this.esTexto) {
-      this.texto = random(palabras); // Selección de palabra
-      this.tam = random(18, 28); // Tamaño más grande para texto
-      this.fuente = random(fuentes); // Fuente aleatoria
+      this.texto = random(palabras);
+      this.tam = random(18, 28);
+      this.fuente = random(fuentes);
     }
   }
 
   aplicarFuerza(f) {
-    this.acc.add(f); // Aplicar fuerza a la aceleración
+    this.acc.add(f);
   }
 
   actualizar() {
-    this.vel.add(this.acc); // Actualizar velocidad
-    this.pos.add(this.vel); // Actualizar posición
-    this.acc.mult(0); // Reset aceleración
-    this.lifespan -= 2; // Reducir vida útil
+    this.vel.add(this.acc);
+    this.pos.add(this.vel);
+    this.acc.mult(0);
+    this.lifespan -= 2;
 
     let fueraDelMarco = mouseX < width / 2 - 150 || mouseX > width / 2 + 150 ||
-                        mouseY < height / 2 - 200 || mouseY > height / 2 + 200; // Detectar si el ratón está fuera del espejo
+                        mouseY < height / 2 - 200 || mouseY > height / 2 + 200;
 
     if (this.dejaEstela && !this.esTexto && fueraDelMarco) {
       estelas.noStroke();
-      estelas.fill(red(this.color), green(this.color), blue(this.color), 1.5); // Opacidad baja
-      estelas.ellipse(this.pos.x, this.pos.y, this.tam, this.tam); // Dibujar estela solo fuera del marco
+      estelas.fill(red(this.color), green(this.color), blue(this.color), 1.5);
+      estelas.ellipse(this.pos.x, this.pos.y, this.tam, this.tam);
     }
   }
 
@@ -194,36 +197,36 @@ class Particula {
       textFont(this.fuente);
       textSize(this.tam);
       textAlign(CENTER, CENTER);
-      text(this.texto, this.pos.x, this.pos.y); // Dibujar texto
+      text(this.texto, this.pos.x, this.pos.y);
     } else {
-      ellipse(this.pos.x, this.pos.y, this.tam); // Dibujar partícula
+      ellipse(this.pos.x, this.pos.y, this.tam);
     }
   }
 
   estaMuerta() {
-    return this.lifespan < 0; // Condición de desaparición
+    return this.lifespan < 0;
   }
 }
 
 class SistemaParticulas {
   constructor() {
-    this.particulas = []; // Lista de partículas
+    this.particulas = [];
   }
 
   addParticula() {
-    let dentro = // Verifica si el ratón está dentro del espejo
+    let dentro =
       mouseX > width / 2 - 150 &&
       mouseX < width / 2 + 150 &&
       mouseY > height / 2 - 200 &&
       mouseY < height / 2 + 200;
 
-    this.particulas.push(new Particula(dentro)); // Añadir partícula nueva
+    this.particulas.push(new Particula(dentro));
   }
 
   run() {
-    this.addParticula(); // Crear nueva partícula cada frame
+    this.addParticula();
 
-    let dentro = // Verifica si el ratón está dentro del espejo
+    let dentro =
       mouseX > width / 2 - 150 &&
       mouseX < width / 2 + 150 &&
       mouseY > height / 2 - 200 &&
@@ -235,7 +238,7 @@ class SistemaParticulas {
       if (dentro) {
         let objetivo = createVector(mouseX, mouseY);
         let dir = p5.Vector.sub(objetivo, p.pos);
-        dir.setMag(0.02); // Fuerza de atracción suave
+        dir.setMag(0.02);
         p.aplicarFuerza(dir);
       }
 
@@ -243,11 +246,13 @@ class SistemaParticulas {
       p.mostrar();
 
       if (p.estaMuerta()) {
-        this.particulas.splice(i, 1); // Eliminar partícula muerta
+        this.particulas.splice(i, 1);
       }
     }
   }
 }
+
+
 
 /* Para la parte de los colores, he utilizado chat gpt finalmente para que me diga el porcentaje de ellos:
 
