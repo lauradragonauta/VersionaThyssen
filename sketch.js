@@ -53,18 +53,14 @@ function preload() {
 }
 
 function setup() {
-  window.onload = () => {
-    requestAnimationFrame(() => {
-      const container = document.getElementById('p5-container');
-      const w = container.offsetWidth;
-      const h = container.offsetHeight;
+  const container = document.getElementById('p5-container');
+  const w = container.offsetWidth;
+  const h = container.offsetHeight;
 
-      let canvas = createCanvas(w, h);
-      canvas.parent('p5-container');
-      estelas = createGraphics(w, h);
-      iniciarSketch();
-    });
-  };
+  let canvas = createCanvas(w, h);
+  canvas.parent('p5-container');
+  estelas = createGraphics(w, h);
+  iniciarSketch();
 }
 
 function windowResized() {
@@ -72,10 +68,8 @@ function windowResized() {
   const w = container.offsetWidth;
   const h = container.offsetHeight;
 
-  if (w > 0 && h > 0) {
-    resizeCanvas(w, h);
-    estelas = createGraphics(w, h);
-  }
+  resizeCanvas(w, h);
+  estelas = createGraphics(w, h);
 }
 
 function iniciarSketch() {
@@ -261,6 +255,7 @@ class SistemaParticulas {
     }
   }
 }
+
 
 
 
