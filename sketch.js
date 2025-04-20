@@ -92,7 +92,7 @@ function draw() {
   if (escalar) {
     push();
     scale(0.5);
-    translate(width * 0.25, height * 0.25); // centrado real del contenido escalado
+    translate(200, 200); // posición fija para el contenido escalado
   }
 
   image(estelas, 0, 0);
@@ -108,6 +108,7 @@ function draw() {
     pop();
   }
 }
+
 
 
 // ------------------ CLASES ------------------
