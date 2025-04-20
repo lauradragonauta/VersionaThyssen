@@ -126,6 +126,11 @@ function iniciarSketch() {
 function draw() {
   if (!sistema || !estelas) return;
 
+  let escalar = width < 200;
+
+  if (escalar) push();
+  if (escalar) scale(0.5);
+
   background(245, 240, 235, 20);
   image(estelas, 0, 0);
   sistema.run();
@@ -135,6 +140,8 @@ function draw() {
   strokeWeight(1);
   rectMode(CENTER);
   rect(width / 2, height / 2, 300, 400);
+
+  if (escalar) pop();
 }
 
 // ------------------ CLASES ------------------
@@ -255,6 +262,7 @@ class SistemaParticulas {
     }
   }
 }
+
 
 
 
