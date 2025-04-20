@@ -126,7 +126,7 @@ function iniciarSketch() {
 function draw() {
   if (!sistema || !estelas) return;
 
-  let escalar = width < 200;
+  let escalar = width < 800;
 
   if (escalar) push();
   if (escalar) scale(0.5);
