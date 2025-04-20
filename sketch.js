@@ -92,7 +92,7 @@ function draw() {
   if (escalar) {
     push();
     scale(0.5);
-    translate(400, 400); // posición fija para el contenido escalado
+    translate(200, 200); // posición fija para el contenido escalado
   }
 
   image(estelas, 0, 0);
