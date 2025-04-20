@@ -54,14 +54,38 @@ function preload() {
 
 function setup() {
   const container = document.getElementById('p5-container');
+
+  // Esperar hasta que el contenedor tenga un tamaño válido antes de crear el canvas
+  const checkSizeAndCreateCanvas = () => {
+    let w = container.offsetWidth;
+    let h = container.offsetHeight;
+
+    if (w > 0 && h > 0) {
+      let canvas = createCanvas(w, h);
+      canvas.parent('p5-container');
+      estelas = createGraphics(w, h);
+      iniciarSketch(); // Ejecutar el resto del código
+    } else {
+      setTimeout(checkSizeAndCreateCanvas, 50);
+    }
+  };
+
+  checkSizeAndCreateCanvas();
+}
+
+function windowResized() {
+  const container = document.getElementById('p5-container');
   let w = container.offsetWidth;
   let h = container.offsetHeight;
 
-  let canvas = createCanvas(w, h);
-  canvas.parent('p5-container');
+  if (w > 0 && h > 0) {
+    resizeCanvas(w, h);
+    estelas = createGraphics(w, h);
+  }
+}
 
-  estelas = createGraphics(w, h);
-
+// Este bloque contiene todo el código original de setup(), excepto createCanvas y estelas
+function iniciarSketch() {
   textFont(fuentes[0]);
   text('Parisienne-Regular', 50, 100);
   textFont(fuentes[1]);
@@ -113,6 +137,8 @@ function setup() {
 }
 
 function draw() {
+  if (!sistema || !estelas) return; // Esperar a que todo esté inicializado
+
   background(245, 240, 235, 20);
   image(estelas, 0, 0);
   sistema.run();
@@ -124,16 +150,7 @@ function draw() {
   rect(width / 2, height / 2, 300, 400);
 }
 
-function windowResized() {
-  const container = document.getElementById('p5-container');
-  let w = container.offsetWidth;
-  let h = container.offsetHeight;
-
-  resizeCanvas(w, h);
-  estelas = createGraphics(w, h);
-}
-
-// --------------------------------------------------------
+// --------------------- CLASES ---------------------
 
 class Particula {
   constructor(generarTexto) {
@@ -251,6 +268,7 @@ class SistemaParticulas {
     }
   }
 }
+
 
 
 
