@@ -2,7 +2,6 @@ let sistema;
 let palabras = ["yo", "mirada", "reflejo", "presencia", "interior", "ella", "luz"];
 let paleta = [];
 let fuentes = [];
-let baseSize = 900; // tamaño fijo
 
 function preload() {
   fuentes.push(loadFont('assets/Parisienne-Regular.ttf'));
@@ -12,60 +11,40 @@ function preload() {
 }
 
 function setup() {
-  let canvas = createCanvas(baseSize, baseSize);
-  canvas.parent('p5-container');
+  createCanvas(900, 900); // canvas fijo
+  sistema = new SistemaParticulas();
 
-  iniciarSketch();
-}
-
-function iniciarSketch() {
   textFont(fuentes[0]);
 
   let dominantes = [
-    [232, 212, 200],
-    [243, 238, 230],
-    [202, 183, 170],
-    [214, 194, 184],
-    [180, 180, 180],
-    [255, 255, 255]
+    [232, 212, 200], [243, 238, 230], [202, 183, 170],
+    [214, 194, 184], [180, 180, 180], [255, 255, 255]
   ];
-
   let secundarios = [
-    [98, 89, 88],
-    [160, 130, 128],
-    [172, 158, 155],
-    [132, 111, 111],
-    [200, 175, 160],
-    [134, 144, 156]
+    [98, 89, 88], [160, 130, 128], [172, 158, 155],
+    [132, 111, 111], [200, 175, 160], [134, 144, 156]
   ];
-
   let acentos = [
-    [80, 64, 66],
-    [0, 0, 0],
-    [190, 190, 190]
+    [80, 64, 66], [0, 0, 0], [190, 190, 190]
   ];
 
-  for (let i = 0; i < 6; i++) {
+  for (let i = 0; i < dominantes.length; i++) {
     for (let j = 0; j < 6; j++) {
       paleta.push(color(...dominantes[i]));
     }
   }
-  for (let i = 0; i < 6; i++) {
+  for (let i = 0; i < secundarios.length; i++) {
     for (let j = 0; j < 3; j++) {
       paleta.push(color(...secundarios[i]));
     }
   }
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < acentos.length; i++) {
     paleta.push(color(...acentos[i]));
   }
-
-  sistema = new SistemaParticulas();
 }
 
 function draw() {
-  if (!sistema) return;
-
-  background(245, 240, 235, 20); // efecto estela
+  background(245, 240, 235, 20);
 
   sistema.run();
 
@@ -199,7 +178,5 @@ class SistemaParticulas {
     }
   }
 }
-
-
 
 
