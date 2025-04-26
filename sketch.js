@@ -131,7 +131,7 @@ class Particula {
     }
 
     this.pos = createVector(x, y);
-    this.vel = p5.Vector.random2D().mult(random(0.1, 0.3)); // más suave
+    this.vel = p5.Vector.random2D().mult(random(0.3, 0.8)); // más suave
     this.acc = createVector(0, 0);
     this.lifespan = 255;
     this.tam = random(4, 10); // partículas más grandes
@@ -216,7 +216,7 @@ class SistemaParticulas {
       if (dentro) {
         let objetivo = createVector(mouseX, mouseY);
         let dir = p5.Vector.sub(objetivo, p.pos);
-        dir.setMag(0.005);
+        dir.setMag(0.015);
         p.aplicarFuerza(dir);
       }
 
