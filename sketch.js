@@ -11,8 +11,8 @@ function preload() {
 }
 
 function setup() {
-  let canvas = createCanvas(400, 500);
-  canvas.parent('p5-container'); // 💥 Enlazar el canvas al div contenedor
+  let canvas = createCanvas(225, 225);
+  canvas.parent('p5-container');
   sistema = new SistemaParticulas();
 
   textFont(fuentes[0]);
@@ -51,9 +51,9 @@ function draw() {
 
   noFill();
   stroke(200, 100);
-  strokeWeight(0.5);
+  strokeWeight(1); // más visible
   rectMode(CENTER);
-  rect(width / 2, height / 2, 75, 100); // marco adaptado a canvas pequeño
+  rect(width / 2, height / 2, 150, 200); // marco más grande
 }
 
 // ------------------ CLASES ------------------
@@ -62,7 +62,7 @@ class Particula {
   constructor(generarTexto) {
     let side = floor(random(4));
     let x, y;
-    let w = 75, h = 100;
+    let w = 150, h = 200;
     if (side === 0) {
       x = random(width / 2 - w / 2, width / 2 + w / 2);
       y = height / 2 - h / 2;
@@ -78,17 +78,17 @@ class Particula {
     }
 
     this.pos = createVector(x, y);
-    this.vel = p5.Vector.random2D().mult(random(0.3, 0.8));
+    this.vel = p5.Vector.random2D().mult(random(0.3, 1));
     this.acc = createVector(0, 0);
     this.lifespan = 255;
-    this.tam = random(1, 3);
+    this.tam = random(3, 6); // partículas más grandes
     this.esTexto = generarTexto && random(1) < 0.2;
     this.dejaEstela = random(1) < 0.15;
     this.color = random(paleta);
 
     if (this.esTexto) {
       this.texto = random(palabras);
-      this.tamTexto = random(6, 10);
+      this.tamTexto = random(12, 18); // textos más grandes
       this.fuente = random(fuentes);
     }
   }
@@ -103,8 +103,8 @@ class Particula {
     this.acc.mult(0);
     this.lifespan -= 2;
 
-    let fueraDelMarco = mouseX < width / 2 - 37.5 || mouseX > width / 2 + 37.5 ||
-                        mouseY < height / 2 - 50 || mouseY > height / 2 + 50;
+    let fueraDelMarco = mouseX < width / 2 - 75 || mouseX > width / 2 + 75 ||
+                        mouseY < height / 2 - 100 || mouseY > height / 2 + 100;
 
     if (this.dejaEstela && !this.esTexto && fueraDelMarco) {
       noStroke();
@@ -141,10 +141,10 @@ class SistemaParticulas {
     if (this.framesDesdeInicio < 5) return;
 
     let dentro =
-      mouseX > width / 2 - 37.5 &&
-      mouseX < width / 2 + 37.5 &&
-      mouseY > height / 2 - 50 &&
-      mouseY < height / 2 + 50;
+      mouseX > width / 2 - 75 &&
+      mouseX < width / 2 + 75 &&
+      mouseY > height / 2 - 100 &&
+      mouseY < height / 2 + 100;
 
     this.particulas.push(new Particula(dentro));
   }
@@ -155,10 +155,10 @@ class SistemaParticulas {
     this.addParticula();
 
     let dentro =
-      mouseX > width / 2 - 37.5 &&
-      mouseX < width / 2 + 37.5 &&
-      mouseY > height / 2 - 50 &&
-      mouseY < height / 2 + 50;
+      mouseX > width / 2 - 75 &&
+      mouseX < width / 2 + 75 &&
+      mouseY > height / 2 - 100 &&
+      mouseY < height / 2 + 100;
 
     for (let i = this.particulas.length - 1; i >= 0; i--) {
       let p = this.particulas[i];
