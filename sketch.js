@@ -2,8 +2,7 @@ let sistema;
 let palabras = ["yo", "mirada", "reflejo", "presencia", "interior", "ella", "luz"];
 let paleta = [];
 let fuentes = [];
-let baseSize = 900;
-let escala = 1;
+let baseSize = 900; // tamaño fijo
 
 function preload() {
   fuentes.push(loadFont('assets/Parisienne-Regular.ttf'));
@@ -13,23 +12,10 @@ function preload() {
 }
 
 function setup() {
-  let canvas = createCanvas(100, 100);
+  let canvas = createCanvas(baseSize, baseSize);
   canvas.parent('p5-container');
 
-  setTimeout(() => {
-    ajustarCanvas();
-    iniciarSketch();
-  }, 50);
-}
-
-function windowResized() {
-  ajustarCanvas();
-}
-
-function ajustarCanvas() {
-  let tam = min(windowWidth, windowHeight);
-  resizeCanvas(tam, tam);
-  escala = tam / baseSize;
+  iniciarSketch();
 }
 
 function iniciarSketch() {
@@ -79,9 +65,7 @@ function iniciarSketch() {
 function draw() {
   if (!sistema) return;
 
-  background(245, 240, 235, 20); // efecto de estela
-
-  scale(escala);
+  background(245, 240, 235, 20); // efecto estela
 
   sistema.run();
 
@@ -89,7 +73,7 @@ function draw() {
   stroke(200, 100);
   strokeWeight(1);
   rectMode(CENTER);
-  rect(baseSize / 2, baseSize / 2, 300, 400);
+  rect(width / 2, height / 2, 300, 400);
 }
 
 // ------------------ CLASES ------------------
@@ -100,17 +84,17 @@ class Particula {
     let x, y;
     let w = 300, h = 400;
     if (side === 0) {
-      x = random(baseSize / 2 - w / 2, baseSize / 2 + w / 2);
-      y = baseSize / 2 - h / 2;
+      x = random(width / 2 - w / 2, width / 2 + w / 2);
+      y = height / 2 - h / 2;
     } else if (side === 1) {
-      x = random(baseSize / 2 - w / 2, baseSize / 2 + w / 2);
-      y = baseSize / 2 + h / 2;
+      x = random(width / 2 - w / 2, width / 2 + w / 2);
+      y = height / 2 + h / 2;
     } else if (side === 2) {
-      x = baseSize / 2 - w / 2;
-      y = random(baseSize / 2 - h / 2, baseSize / 2 + h / 2);
+      x = width / 2 - w / 2;
+      y = random(height / 2 - h / 2, height / 2 + h / 2);
     } else {
-      x = baseSize / 2 + w / 2;
-      y = random(baseSize / 2 - h / 2, baseSize / 2 + h / 2);
+      x = width / 2 + w / 2;
+      y = random(height / 2 - h / 2, height / 2 + h / 2);
     }
 
     this.pos = createVector(x, y);
@@ -139,11 +123,8 @@ class Particula {
     this.acc.mult(0);
     this.lifespan -= 2;
 
-    let mouseXCorr = mouseX / escala;
-    let mouseYCorr = mouseY / escala;
-
-    let fueraDelMarco = mouseXCorr < baseSize / 2 - 150 || mouseXCorr > baseSize / 2 + 150 ||
-                        mouseYCorr < baseSize / 2 - 200 || mouseYCorr > baseSize / 2 + 200;
+    let fueraDelMarco = mouseX < width / 2 - 150 || mouseX > width / 2 + 150 ||
+                        mouseY < height / 2 - 200 || mouseY > height / 2 + 200;
 
     if (this.dejaEstela && !this.esTexto && fueraDelMarco) {
       noStroke();
@@ -178,16 +159,12 @@ class SistemaParticulas {
 
   addParticula() {
     if (this.framesDesdeInicio < 5) return;
-    if (width < 100 || height < 100) return;
-
-    let mouseXCorr = mouseX / escala;
-    let mouseYCorr = mouseY / escala;
 
     let dentro =
-      mouseXCorr > baseSize / 2 - 150 &&
-      mouseXCorr < baseSize / 2 + 150 &&
-      mouseYCorr > baseSize / 2 - 200 &&
-      mouseYCorr < baseSize / 2 + 200;
+      mouseX > width / 2 - 150 &&
+      mouseX < width / 2 + 150 &&
+      mouseY > height / 2 - 200 &&
+      mouseY < height / 2 + 200;
 
     this.particulas.push(new Particula(dentro));
   }
@@ -197,20 +174,17 @@ class SistemaParticulas {
 
     this.addParticula();
 
-    let mouseXCorr = mouseX / escala;
-    let mouseYCorr = mouseY / escala;
-
     let dentro =
-      mouseXCorr > baseSize / 2 - 150 &&
-      mouseXCorr < baseSize / 2 + 150 &&
-      mouseYCorr > baseSize / 2 - 200 &&
-      mouseYCorr < baseSize / 2 + 200;
+      mouseX > width / 2 - 150 &&
+      mouseX < width / 2 + 150 &&
+      mouseY > height / 2 - 200 &&
+      mouseY < height / 2 + 200;
 
     for (let i = this.particulas.length - 1; i >= 0; i--) {
       let p = this.particulas[i];
 
       if (dentro) {
-        let objetivo = createVector(mouseXCorr, mouseYCorr);
+        let objetivo = createVector(mouseX, mouseY);
         let dir = p5.Vector.sub(objetivo, p.pos);
         dir.setMag(0.02);
         p.aplicarFuerza(dir);
@@ -225,6 +199,7 @@ class SistemaParticulas {
     }
   }
 }
+
 
 
 
