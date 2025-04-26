@@ -3,7 +3,7 @@ let palabras = ["yo", "mirada", "reflejo", "presencia", "interior", "ella", "luz
 let paleta = [];
 let fuentes = [];
 let estelas;
-let baseSize = 900; // tamaño lógico interno
+let baseSize = 900;
 let escala = 1;
 
 function preload() {
@@ -14,7 +14,7 @@ function preload() {
 }
 
 function setup() {
-  let canvas = createCanvas(100, 100); // inicializar pequeño
+  let canvas = createCanvas(100, 100);
   canvas.parent('p5-container');
   estelas = createGraphics(100, 100);
   ajustarCanvas();
@@ -81,9 +81,13 @@ function draw() {
 
   background(245, 240, 235, 20);
 
-  scale(escala); // escalar todo el dibujo
+  scale(escala);
 
-  image(estelas, 0, 0);
+  // NUEVO: control de que estelas esté bien inicializada
+  if (estelas.width > 0 && estelas.height > 0) {
+    image(estelas, 0, 0);
+  }
+
   sistema.run();
 
   noFill();
