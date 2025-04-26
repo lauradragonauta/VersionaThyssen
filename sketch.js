@@ -17,8 +17,12 @@ function setup() {
   let canvas = createCanvas(100, 100);
   canvas.parent('p5-container');
   estelas = createGraphics(100, 100);
-  ajustarCanvas();
-  iniciarSketch();
+
+  // 🔥 Esperar 50ms para asegurar que Readymag / navegador calcula bien el iframe
+  setTimeout(() => {
+    ajustarCanvas();
+    iniciarSketch();
+  }, 50);
 }
 
 function windowResized() {
@@ -223,4 +227,3 @@ class SistemaParticulas {
     }
   }
 }
-
