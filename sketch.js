@@ -4,6 +4,10 @@ let paleta = [];
 let fuentes = [];
 let estelas;
 
+// NUEVO: Variables para guardar una posición segura del ratón
+let ratonActivo = false;
+let ratonSeguro = { x: 0, y: 0 };
+
 function preload() {
   fuentes.push(loadFont('assets/Parisienne-Regular.ttf'));
   fuentes.push(loadFont('assets/Gloock-Regular.ttf'));
@@ -19,6 +23,11 @@ function setup() {
   let canvas = createCanvas(w, h);
   canvas.parent('p5-container');
   estelas = createGraphics(w, h);
+  
+  // Inicializamos la posición segura al centro
+  ratonSeguro.x = width / 2;
+  ratonSeguro.y = height / 2;
+
   iniciarSketch();
 }
 
@@ -99,25 +108,24 @@ function draw() {
 
   sistema.run();
 
-  // 🔵 Añadido: generar una partícula extra cada 60 frames (~1 segundo)
-  // para evitar que el navegador "congele" el sketch si no hay movimiento
-  if (frameCount % 60 === 0) {
-    let fueraDelMarco = random(1) < 0.5; // 50% de probabilidades de ser estela o normal
-    let p = new Particula(fueraDelMarco);
-    sistema.particulas.push(p);
-  }
-
   noFill();
   stroke(200, 100);
   strokeWeight(1.5);
   rectMode(CENTER);
-  rect(width / 2, height / 2, 450, 600); // Marco
+  rect(width / 2, height / 2, 450, 600);
 
   if (escalar) {
     pop();
   }
 }
 
+function mouseMoved() {
+  if (mouseX >= 0 && mouseX <= width && mouseY >= 0 && mouseY <= height) {
+    ratonActivo = true;
+    ratonSeguro.x = mouseX;
+    ratonSeguro.y = mouseY;
+  }
+}
 
 // ------------------ CLASES ------------------
 
@@ -141,10 +149,10 @@ class Particula {
     }
 
     this.pos = createVector(x, y);
-    this.vel = p5.Vector.random2D().mult(random(0.3, 0.8)); // velocidad corregida
+    this.vel = p5.Vector.random2D().mult(random(0.3, 0.8));
     this.acc = createVector(0, 0);
     this.lifespan = 255;
-    this.tam = random(4, 10); // partículas más grandes
+    this.tam = random(4, 10);
     this.esTexto = generarTexto && random(1) < 0.15;
     this.dejaEstela = random(1) < 0.15;
     this.color = random(paleta);
@@ -166,8 +174,8 @@ class Particula {
     this.acc.mult(0);
     this.lifespan -= 2;
 
-    let fueraDelMarco = mouseX < width / 2 - 225 || mouseX > width / 2 + 225 ||
-                        mouseY < height / 2 - 300 || mouseY > height / 2 + 300;
+    let fueraDelMarco = ratonSeguro.x < width / 2 - 225 || ratonSeguro.x > width / 2 + 225 ||
+                        ratonSeguro.y < height / 2 - 300 || ratonSeguro.y > height / 2 + 300;
 
     if (this.dejaEstela && !this.esTexto && fueraDelMarco) {
       estelas.noStroke();
@@ -200,11 +208,12 @@ class SistemaParticulas {
   }
 
   addParticula() {
+    // Siempre generar una nueva partícula
     let dentro =
-      mouseX > width / 2 - 225 &&
-      mouseX < width / 2 + 225 &&
-      mouseY > height / 2 - 300 &&
-      mouseY < height / 2 + 300;
+      ratonSeguro.x > width / 2 - 225 &&
+      ratonSeguro.x < width / 2 + 225 &&
+      ratonSeguro.y > height / 2 - 300 &&
+      ratonSeguro.y < height / 2 + 300;
 
     this.particulas.push(new Particula(dentro));
   }
@@ -213,18 +222,18 @@ class SistemaParticulas {
     this.addParticula();
 
     let dentro =
-      mouseX > width / 2 - 225 &&
-      mouseX < width / 2 + 225 &&
-      mouseY > height / 2 - 300 &&
-      mouseY < height / 2 + 300;
+      ratonSeguro.x > width / 2 - 225 &&
+      ratonSeguro.x < width / 2 + 225 &&
+      ratonSeguro.y > height / 2 - 300 &&
+      ratonSeguro.y < height / 2 + 300;
 
     for (let i = this.particulas.length - 1; i >= 0; i--) {
       let p = this.particulas[i];
 
       if (dentro) {
-        let objetivo = createVector(mouseX, mouseY);
+        let objetivo = createVector(ratonSeguro.x, ratonSeguro.y);
         let dir = p5.Vector.sub(objetivo, p.pos);
-        dir.setMag(0.015); // fuerza de atracción corregida
+        dir.setMag(0.015);
         p.aplicarFuerza(dir);
       }
 
@@ -237,6 +246,7 @@ class SistemaParticulas {
     }
   }
 }
+
 
 
 
