@@ -96,18 +96,28 @@ function draw() {
   }
 
   image(estelas, 0, 0);
+
   sistema.run();
+
+  // 🔵 Añadido: generar una partícula extra cada 60 frames (~1 segundo)
+  // para evitar que el navegador "congele" el sketch si no hay movimiento
+  if (frameCount % 60 === 0) {
+    let fueraDelMarco = random(1) < 0.5; // 50% de probabilidades de ser estela o normal
+    let p = new Particula(fueraDelMarco);
+    sistema.particulas.push(p);
+  }
 
   noFill();
   stroke(200, 100);
   strokeWeight(1.5);
   rectMode(CENTER);
-  rect(width / 2, height / 2, 450, 600); // Marco más grande
+  rect(width / 2, height / 2, 450, 600); // Marco
 
   if (escalar) {
     pop();
   }
 }
+
 
 // ------------------ CLASES ------------------
 
