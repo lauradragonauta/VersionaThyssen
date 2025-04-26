@@ -133,7 +133,7 @@ class Particula {
     }
 
     this.pos = createVector(x, y);
-    this.vel = p5.Vector.random2D().mult(random(0.1, 1));
+    this.vel = p5.Vector.random2D().mult(random(0.1, 0.3));
     this.acc = createVector(0, 0);
     this.lifespan = 255;
     this.tam = random(2, 6);
