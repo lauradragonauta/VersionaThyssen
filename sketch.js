@@ -92,7 +92,7 @@ function draw() {
   if (escalar) {
     push();
     scale(0.5);
-    translate(200, 200); // ajuste al escalar
+    translate(200, 200);
   }
 
   image(estelas, 0, 0);
@@ -102,7 +102,7 @@ function draw() {
   stroke(200, 100);
   strokeWeight(1.5);
   rectMode(CENTER);
-  rect(width / 2, height / 2, 450, 600); // marco más grande adaptado
+  rect(width / 2, height / 2, 450, 600); // Marco más grande
 
   if (escalar) {
     pop();
@@ -131,7 +131,7 @@ class Particula {
     }
 
     this.pos = createVector(x, y);
-    this.vel = p5.Vector.random2D().mult(random(0.3, 0.8)); // más suave
+    this.vel = p5.Vector.random2D().mult(random(0.3, 0.8)); // velocidad corregida
     this.acc = createVector(0, 0);
     this.lifespan = 255;
     this.tam = random(4, 10); // partículas más grandes
@@ -141,7 +141,7 @@ class Particula {
 
     if (this.esTexto) {
       this.texto = random(palabras);
-      this.tamTexto = random(24, 36); // textos más grandes
+      this.tamTexto = random(24, 36);
       this.fuente = random(fuentes);
     }
   }
@@ -196,9 +196,7 @@ class SistemaParticulas {
       mouseY > height / 2 - 300 &&
       mouseY < height / 2 + 300;
 
-    if (dentro) {
-      this.particulas.push(new Particula(true));
-    }
+    this.particulas.push(new Particula(dentro));
   }
 
   run() {
@@ -216,7 +214,7 @@ class SistemaParticulas {
       if (dentro) {
         let objetivo = createVector(mouseX, mouseY);
         let dir = p5.Vector.sub(objetivo, p.pos);
-        dir.setMag(0.015);
+        dir.setMag(0.015); // fuerza de atracción corregida
         p.aplicarFuerza(dir);
       }
 
@@ -229,4 +227,3 @@ class SistemaParticulas {
     }
   }
 }
-
