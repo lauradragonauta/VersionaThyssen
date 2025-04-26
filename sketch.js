@@ -11,7 +11,7 @@ function preload() {
 }
 
 function setup() {
-  let canvas = createCanvas(225, 225);
+  let canvas = createCanvas(400, 500);
   canvas.parent('p5-container'); // 💥 Enlazar el canvas al div contenedor
   sistema = new SistemaParticulas();
 
