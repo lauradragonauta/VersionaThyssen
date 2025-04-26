@@ -11,7 +11,8 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(225, 225);
+  let canvas = createCanvas(225, 225);
+  canvas.parent('p5-container'); // 💥 Enlazar el canvas al div contenedor
   sistema = new SistemaParticulas();
 
   textFont(fuentes[0]);
@@ -52,7 +53,7 @@ function draw() {
   stroke(200, 100);
   strokeWeight(0.5);
   rectMode(CENTER);
-  rect(width / 2, height / 2, 75, 100); // marco adaptado
+  rect(width / 2, height / 2, 75, 100); // marco adaptado a canvas pequeño
 }
 
 // ------------------ CLASES ------------------
@@ -61,7 +62,7 @@ class Particula {
   constructor(generarTexto) {
     let side = floor(random(4));
     let x, y;
-    let w = 75, h = 100; // marco adaptado
+    let w = 75, h = 100;
     if (side === 0) {
       x = random(width / 2 - w / 2, width / 2 + w / 2);
       y = height / 2 - h / 2;
@@ -80,14 +81,14 @@ class Particula {
     this.vel = p5.Vector.random2D().mult(random(0.3, 0.8));
     this.acc = createVector(0, 0);
     this.lifespan = 255;
-    this.tam = random(1, 3); // partículas más pequeñas
+    this.tam = random(1, 3);
     this.esTexto = generarTexto && random(1) < 0.2;
     this.dejaEstela = random(1) < 0.15;
     this.color = random(paleta);
 
     if (this.esTexto) {
       this.texto = random(palabras);
-      this.tamTexto = random(6, 10); // texto más pequeño
+      this.tamTexto = random(6, 10);
       this.fuente = random(fuentes);
     }
   }
