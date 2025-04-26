@@ -2,7 +2,6 @@ let sistema;
 let palabras = ["yo", "mirada", "reflejo", "presencia", "interior", "ella", "luz"];
 let paleta = [];
 let fuentes = [];
-let estelas;
 let baseSize = 900;
 let escala = 1;
 
@@ -16,7 +15,6 @@ function preload() {
 function setup() {
   let canvas = createCanvas(100, 100);
   canvas.parent('p5-container');
-  estelas = createGraphics(100, 100);
 
   setTimeout(() => {
     ajustarCanvas();
@@ -31,7 +29,6 @@ function windowResized() {
 function ajustarCanvas() {
   let tam = min(windowWidth, windowHeight);
   resizeCanvas(tam, tam);
-  estelas = createGraphics(tam, tam);
   escala = tam / baseSize;
 }
 
@@ -80,15 +77,11 @@ function iniciarSketch() {
 }
 
 function draw() {
-  if (!sistema || !estelas) return;
+  if (!sistema) return;
 
-  background(245, 240, 235, 20);
+  background(245, 240, 235, 20); // efecto de estela
 
   scale(escala);
-
-  if (estelas.width > 0 && estelas.height > 0) {
-    image(estelas, 0, 0);
-  }
 
   sistema.run();
 
@@ -153,9 +146,9 @@ class Particula {
                         mouseYCorr < baseSize / 2 - 200 || mouseYCorr > baseSize / 2 + 200;
 
     if (this.dejaEstela && !this.esTexto && fueraDelMarco) {
-      estelas.noStroke();
-      estelas.fill(red(this.color), green(this.color), blue(this.color), 1.5);
-      estelas.ellipse(this.pos.x * escala, this.pos.y * escala, this.tam, this.tam);
+      noStroke();
+      fill(red(this.color), green(this.color), blue(this.color), 1.5);
+      ellipse(this.pos.x, this.pos.y, this.tam, this.tam);
     }
   }
 
@@ -184,8 +177,8 @@ class SistemaParticulas {
   }
 
   addParticula() {
-    if (this.framesDesdeInicio < 5) return; // no crear durante los primeros frames
-    if (width < 100 || height < 100) return; // no crear si canvas pequeño
+    if (this.framesDesdeInicio < 5) return;
+    if (width < 100 || height < 100) return;
 
     let mouseXCorr = mouseX / escala;
     let mouseYCorr = mouseY / escala;
@@ -232,5 +225,6 @@ class SistemaParticulas {
     }
   }
 }
+
 
 
