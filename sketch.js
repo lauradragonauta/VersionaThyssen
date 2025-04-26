@@ -102,7 +102,7 @@ function draw() {
   stroke(200, 100);
   strokeWeight(1);
   rectMode(CENTER);
-  rect(width / 2, height / 2, 300, 400);
+  rect(width / 2, height / 2, 450, 600); // en vez de 300x400
 
   if (escalar) {
     pop();
@@ -136,7 +136,7 @@ class Particula {
     this.vel = p5.Vector.random2D().mult(random(0.1, 0.3));
     this.acc = createVector(0, 0);
     this.lifespan = 255;
-    this.tam = random(2, 6);
+    this.tam = random(4, 10); // partículas más grandes
     this.esTexto = generarTexto && random(1) < 0.15;
     this.dejaEstela = random(1) < 0.1;
     this.color = random(paleta);
@@ -192,10 +192,10 @@ class SistemaParticulas {
   }
 
 addParticula() {
-  let dentro = mouseX > width / 2 - 150 &&
-               mouseX < width / 2 + 150 &&
-               mouseY > height / 2 - 200 &&
-               mouseY < height / 2 + 200;
+  let dentro = mouseX > width / 2 - 225 &&
+              mouseX < width / 2 + 225 &&
+              mouseY > height / 2 - 300 &&
+              mouseY < height / 2 + 300;
 
   if (dentro) {
     this.particulas.push(new Particula(true)); // Solo generas dentro del marco
