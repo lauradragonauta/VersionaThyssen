@@ -11,7 +11,7 @@ function preload() {
 }
 
 function setup() {
-  let canvas = createCanvas(400, 400);
+  let canvas = createCanvas(400, 500);
   canvas.parent('p5-container');
   sistema = new SistemaParticulas();
 
