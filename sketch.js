@@ -11,7 +11,7 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(900, 900); // canvas fijo
+  createCanvas(225, 225); // canvas pequeño real
   sistema = new SistemaParticulas();
 
   textFont(fuentes[0]);
@@ -46,13 +46,15 @@ function setup() {
 function draw() {
   background(245, 240, 235, 20);
 
+  scale(225 / 900); // Escala todo tu sistema
+
   sistema.run();
 
   noFill();
   stroke(200, 100);
   strokeWeight(1);
   rectMode(CENTER);
-  rect(width / 2, height / 2, 300, 400);
+  rect(900 / 2, 900 / 2, 300, 400); // Siempre basado en 900
 }
 
 // ------------------ CLASES ------------------
@@ -63,17 +65,17 @@ class Particula {
     let x, y;
     let w = 300, h = 400;
     if (side === 0) {
-      x = random(width / 2 - w / 2, width / 2 + w / 2);
-      y = height / 2 - h / 2;
+      x = random(900 / 2 - w / 2, 900 / 2 + w / 2);
+      y = 900 / 2 - h / 2;
     } else if (side === 1) {
-      x = random(width / 2 - w / 2, width / 2 + w / 2);
-      y = height / 2 + h / 2;
+      x = random(900 / 2 - w / 2, 900 / 2 + w / 2);
+      y = 900 / 2 + h / 2;
     } else if (side === 2) {
-      x = width / 2 - w / 2;
-      y = random(height / 2 - h / 2, height / 2 + h / 2);
+      x = 900 / 2 - w / 2;
+      y = random(900 / 2 - h / 2, 900 / 2 + h / 2);
     } else {
-      x = width / 2 + w / 2;
-      y = random(height / 2 - h / 2, height / 2 + h / 2);
+      x = 900 / 2 + w / 2;
+      y = random(900 / 2 - h / 2, 900 / 2 + h / 2);
     }
 
     this.pos = createVector(x, y);
@@ -102,8 +104,8 @@ class Particula {
     this.acc.mult(0);
     this.lifespan -= 2;
 
-    let fueraDelMarco = mouseX < width / 2 - 150 || mouseX > width / 2 + 150 ||
-                        mouseY < height / 2 - 200 || mouseY > height / 2 + 200;
+    let fueraDelMarco = mouseX * (900 / 225) < 900 / 2 - 150 || mouseX * (900 / 225) > 900 / 2 + 150 ||
+                        mouseY * (900 / 225) < 900 / 2 - 200 || mouseY * (900 / 225) > 900 / 2 + 200;
 
     if (this.dejaEstela && !this.esTexto && fueraDelMarco) {
       noStroke();
@@ -140,10 +142,10 @@ class SistemaParticulas {
     if (this.framesDesdeInicio < 5) return;
 
     let dentro =
-      mouseX > width / 2 - 150 &&
-      mouseX < width / 2 + 150 &&
-      mouseY > height / 2 - 200 &&
-      mouseY < height / 2 + 200;
+      mouseX * (900 / 225) > 900 / 2 - 150 &&
+      mouseX * (900 / 225) < 900 / 2 + 150 &&
+      mouseY * (900 / 225) > 900 / 2 - 200 &&
+      mouseY * (900 / 225) < 900 / 2 + 200;
 
     this.particulas.push(new Particula(dentro));
   }
@@ -154,16 +156,16 @@ class SistemaParticulas {
     this.addParticula();
 
     let dentro =
-      mouseX > width / 2 - 150 &&
-      mouseX < width / 2 + 150 &&
-      mouseY > height / 2 - 200 &&
-      mouseY < height / 2 + 200;
+      mouseX * (900 / 225) > 900 / 2 - 150 &&
+      mouseX * (900 / 225) < 900 / 2 + 150 &&
+      mouseY * (900 / 225) > 900 / 2 - 200 &&
+      mouseY * (900 / 225) < 900 / 2 + 200;
 
     for (let i = this.particulas.length - 1; i >= 0; i--) {
       let p = this.particulas[i];
 
       if (dentro) {
-        let objetivo = createVector(mouseX, mouseY);
+        let objetivo = createVector(mouseX * (900 / 225), mouseY * (900 / 225));
         let dir = p5.Vector.sub(objetivo, p.pos);
         dir.setMag(0.02);
         p.aplicarFuerza(dir);
@@ -178,5 +180,3 @@ class SistemaParticulas {
     }
   }
 }
-
-
