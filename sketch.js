@@ -18,7 +18,6 @@ function setup() {
   canvas.parent('p5-container');
   estelas = createGraphics(100, 100);
 
-  // Esperar 50 ms para que Readymag cargue bien
   setTimeout(() => {
     ajustarCanvas();
     iniciarSketch();
@@ -181,11 +180,12 @@ class Particula {
 class SistemaParticulas {
   constructor() {
     this.particulas = [];
-    this.framesDesdeInicio = 0; // Contador de frames
+    this.framesDesdeInicio = 0;
   }
 
   addParticula() {
-    if (this.framesDesdeInicio < 5) return; // No crear partículas en los 5 primeros frames
+    if (this.framesDesdeInicio < 5) return; // no crear durante los primeros frames
+    if (width < 100 || height < 100) return; // no crear si canvas pequeño
 
     let mouseXCorr = mouseX / escala;
     let mouseYCorr = mouseY / escala;
@@ -200,7 +200,7 @@ class SistemaParticulas {
   }
 
   run() {
-    this.framesDesdeInicio++; // Aumentamos contador de frames
+    this.framesDesdeInicio++;
 
     this.addParticula();
 
@@ -232,4 +232,5 @@ class SistemaParticulas {
     }
   }
 }
+
 
