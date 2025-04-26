@@ -3,6 +3,8 @@ let palabras = ["yo", "mirada", "reflejo", "presencia", "interior", "ella", "luz
 let paleta = [];
 let fuentes = [];
 let estelas;
+let baseSize = 900; // tamaño lógico interno
+let escala = 1;
 
 function preload() {
   fuentes.push(loadFont('assets/Parisienne-Regular.ttf'));
@@ -12,34 +14,26 @@ function preload() {
 }
 
 function setup() {
-  const container = document.getElementById('p5-container');
-  const w = container.offsetWidth;
-  const h = container.offsetHeight;
-
-  let canvas = createCanvas(w, h);
+  let canvas = createCanvas(100, 100); // inicializar pequeño
   canvas.parent('p5-container');
-  estelas = createGraphics(w, h);
+  estelas = createGraphics(100, 100);
+  ajustarCanvas();
   iniciarSketch();
 }
 
 function windowResized() {
-  const container = document.getElementById('p5-container');
-  const w = container.offsetWidth;
-  const h = container.offsetHeight;
+  ajustarCanvas();
+}
 
-  resizeCanvas(w, h);
-  estelas = createGraphics(w, h);
+function ajustarCanvas() {
+  let tam = min(windowWidth, windowHeight);
+  resizeCanvas(tam, tam);
+  estelas = createGraphics(tam, tam);
+  escala = tam / baseSize;
 }
 
 function iniciarSketch() {
   textFont(fuentes[0]);
-  text('Parisienne-Regular', 50, 100);
-  textFont(fuentes[1]);
-  text('Gloock-Regular', 50, 170);
-  textFont(fuentes[2]);
-  text('DancingScript-Regular', 50, 240);
-  textFont(fuentes[3]);
-  text('GreatVibes-Regular', 50, 310);
 
   let dominantes = [
     [232, 212, 200],
@@ -87,13 +81,7 @@ function draw() {
 
   background(245, 240, 235, 20);
 
-  let escalar = width < 800;
-
-  if (escalar) {
-    push();
-    scale(0.5);
-    translate(200, 200); // posición fija para el contenido escalado
-  }
+  scale(escala); // escalar todo el dibujo
 
   image(estelas, 0, 0);
   sistema.run();
@@ -102,14 +90,8 @@ function draw() {
   stroke(200, 100);
   strokeWeight(1);
   rectMode(CENTER);
-  rect(width / 2, height / 2, 300, 400);
-
-  if (escalar) {
-    pop();
-  }
+  rect(baseSize / 2, baseSize / 2, 300, 400);
 }
-
-
 
 // ------------------ CLASES ------------------
 
@@ -119,17 +101,17 @@ class Particula {
     let x, y;
     let w = 300, h = 400;
     if (side === 0) {
-      x = random(width / 2 - w / 2, width / 2 + w / 2);
-      y = height / 2 - h / 2;
+      x = random(baseSize / 2 - w / 2, baseSize / 2 + w / 2);
+      y = baseSize / 2 - h / 2;
     } else if (side === 1) {
-      x = random(width / 2 - w / 2, width / 2 + w / 2);
-      y = height / 2 + h / 2;
+      x = random(baseSize / 2 - w / 2, baseSize / 2 + w / 2);
+      y = baseSize / 2 + h / 2;
     } else if (side === 2) {
-      x = width / 2 - w / 2;
-      y = random(height / 2 - h / 2, height / 2 + h / 2);
+      x = baseSize / 2 - w / 2;
+      y = random(baseSize / 2 - h / 2, baseSize / 2 + h / 2);
     } else {
-      x = width / 2 + w / 2;
-      y = random(height / 2 - h / 2, height / 2 + h / 2);
+      x = baseSize / 2 + w / 2;
+      y = random(baseSize / 2 - h / 2, baseSize / 2 + h / 2);
     }
 
     this.pos = createVector(x, y);
@@ -164,7 +146,7 @@ class Particula {
     if (this.dejaEstela && !this.esTexto && fueraDelMarco) {
       estelas.noStroke();
       estelas.fill(red(this.color), green(this.color), blue(this.color), 1.5);
-      estelas.ellipse(this.pos.x, this.pos.y, this.tam, this.tam);
+      estelas.ellipse(this.pos.x * escala, this.pos.y * escala, this.tam, this.tam);
     }
   }
 
@@ -214,7 +196,7 @@ class SistemaParticulas {
       let p = this.particulas[i];
 
       if (dentro) {
-        let objetivo = createVector(mouseX, mouseY);
+        let objetivo = createVector(mouseX / escala, mouseY / escala);
         let dir = p5.Vector.sub(objetivo, p.pos);
         dir.setMag(0.02);
         p.aplicarFuerza(dir);
