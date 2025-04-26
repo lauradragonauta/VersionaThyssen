@@ -191,15 +191,16 @@ class SistemaParticulas {
     this.particulas = [];
   }
 
-  addParticula() {
-    let dentro =
-      mouseX > width / 2 - 150 &&
-      mouseX < width / 2 + 150 &&
-      mouseY > height / 2 - 200 &&
-      mouseY < height / 2 + 200;
+addParticula() {
+  let dentro = mouseX > width / 2 - 150 &&
+               mouseX < width / 2 + 150 &&
+               mouseY > height / 2 - 200 &&
+               mouseY < height / 2 + 200;
 
-    this.particulas.push(new Particula(dentro));
+  if (dentro) {
+    this.particulas.push(new Particula(true)); // Solo generas dentro del marco
   }
+}
 
   run() {
     this.addParticula();
