@@ -83,7 +83,6 @@ function draw() {
 
   scale(escala);
 
-  // NUEVO: control de que estelas esté bien inicializada
   if (estelas.width > 0 && estelas.height > 0) {
     image(estelas, 0, 0);
   }
@@ -144,8 +143,11 @@ class Particula {
     this.acc.mult(0);
     this.lifespan -= 2;
 
-    let fueraDelMarco = mouseX < width / 2 - 150 || mouseX > width / 2 + 150 ||
-                        mouseY < height / 2 - 200 || mouseY > height / 2 + 200;
+    let mouseXCorr = mouseX / escala;
+    let mouseYCorr = mouseY / escala;
+
+    let fueraDelMarco = mouseXCorr < baseSize / 2 - 150 || mouseXCorr > baseSize / 2 + 150 ||
+                        mouseYCorr < baseSize / 2 - 200 || mouseYCorr > baseSize / 2 + 200;
 
     if (this.dejaEstela && !this.esTexto && fueraDelMarco) {
       estelas.noStroke();
@@ -178,11 +180,14 @@ class SistemaParticulas {
   }
 
   addParticula() {
+    let mouseXCorr = mouseX / escala;
+    let mouseYCorr = mouseY / escala;
+
     let dentro =
-      mouseX > width / 2 - 150 &&
-      mouseX < width / 2 + 150 &&
-      mouseY > height / 2 - 200 &&
-      mouseY < height / 2 + 200;
+      mouseXCorr > baseSize / 2 - 150 &&
+      mouseXCorr < baseSize / 2 + 150 &&
+      mouseYCorr > baseSize / 2 - 200 &&
+      mouseYCorr < baseSize / 2 + 200;
 
     this.particulas.push(new Particula(dentro));
   }
@@ -190,17 +195,20 @@ class SistemaParticulas {
   run() {
     this.addParticula();
 
+    let mouseXCorr = mouseX / escala;
+    let mouseYCorr = mouseY / escala;
+
     let dentro =
-      mouseX > width / 2 - 150 &&
-      mouseX < width / 2 + 150 &&
-      mouseY > height / 2 - 200 &&
-      mouseY < height / 2 + 200;
+      mouseXCorr > baseSize / 2 - 150 &&
+      mouseXCorr < baseSize / 2 + 150 &&
+      mouseYCorr > baseSize / 2 - 200 &&
+      mouseYCorr < baseSize / 2 + 200;
 
     for (let i = this.particulas.length - 1; i >= 0; i--) {
       let p = this.particulas[i];
 
       if (dentro) {
-        let objetivo = createVector(mouseX / escala, mouseY / escala);
+        let objetivo = createVector(mouseXCorr, mouseYCorr);
         let dir = p5.Vector.sub(objetivo, p.pos);
         dir.setMag(0.02);
         p.aplicarFuerza(dir);
@@ -215,3 +223,4 @@ class SistemaParticulas {
     }
   }
 }
+
