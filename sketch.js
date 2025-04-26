@@ -11,7 +11,7 @@ function preload() {
 }
 
 function setup() {
-  let canvas = createCanvas(225, 225);
+  let canvas = createCanvas(400, 400);
   canvas.parent('p5-container');
   sistema = new SistemaParticulas();
 
@@ -51,9 +51,9 @@ function draw() {
 
   noFill();
   stroke(200, 100);
-  strokeWeight(1); // más visible
+  strokeWeight(1.5);
   rectMode(CENTER);
-  rect(width / 2, height / 2, 150, 200); // marco más grande
+  rect(width / 2, height / 2, 270, 360); // marco grande adaptado
 }
 
 // ------------------ CLASES ------------------
@@ -62,7 +62,7 @@ class Particula {
   constructor(generarTexto) {
     let side = floor(random(4));
     let x, y;
-    let w = 150, h = 200;
+    let w = 270, h = 360;
     if (side === 0) {
       x = random(width / 2 - w / 2, width / 2 + w / 2);
       y = height / 2 - h / 2;
@@ -81,14 +81,14 @@ class Particula {
     this.vel = p5.Vector.random2D().mult(random(0.3, 1));
     this.acc = createVector(0, 0);
     this.lifespan = 255;
-    this.tam = random(3, 6); // partículas más grandes
+    this.tam = random(5, 10); // partículas más grandes
     this.esTexto = generarTexto && random(1) < 0.2;
     this.dejaEstela = random(1) < 0.15;
     this.color = random(paleta);
 
     if (this.esTexto) {
       this.texto = random(palabras);
-      this.tamTexto = random(12, 18); // textos más grandes
+      this.tamTexto = random(20, 30); // textos mucho más grandes
       this.fuente = random(fuentes);
     }
   }
@@ -103,8 +103,8 @@ class Particula {
     this.acc.mult(0);
     this.lifespan -= 2;
 
-    let fueraDelMarco = mouseX < width / 2 - 75 || mouseX > width / 2 + 75 ||
-                        mouseY < height / 2 - 100 || mouseY > height / 2 + 100;
+    let fueraDelMarco = mouseX < width / 2 - 135 || mouseX > width / 2 + 135 ||
+                        mouseY < height / 2 - 180 || mouseY > height / 2 + 180;
 
     if (this.dejaEstela && !this.esTexto && fueraDelMarco) {
       noStroke();
@@ -141,10 +141,10 @@ class SistemaParticulas {
     if (this.framesDesdeInicio < 5) return;
 
     let dentro =
-      mouseX > width / 2 - 75 &&
-      mouseX < width / 2 + 75 &&
-      mouseY > height / 2 - 100 &&
-      mouseY < height / 2 + 100;
+      mouseX > width / 2 - 135 &&
+      mouseX < width / 2 + 135 &&
+      mouseY > height / 2 - 180 &&
+      mouseY < height / 2 + 180;
 
     this.particulas.push(new Particula(dentro));
   }
@@ -155,10 +155,10 @@ class SistemaParticulas {
     this.addParticula();
 
     let dentro =
-      mouseX > width / 2 - 75 &&
-      mouseX < width / 2 + 75 &&
-      mouseY > height / 2 - 100 &&
-      mouseY < height / 2 + 100;
+      mouseX > width / 2 - 135 &&
+      mouseX < width / 2 + 135 &&
+      mouseY > height / 2 - 180 &&
+      mouseY < height / 2 + 180;
 
     for (let i = this.particulas.length - 1; i >= 0; i--) {
       let p = this.particulas[i];
